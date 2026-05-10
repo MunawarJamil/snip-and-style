@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, Scissors } from "lucide-react";
 import { motion } from "framer-motion";
@@ -16,8 +17,14 @@ import {
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
+function isActivePath(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname() ?? "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -53,16 +60,31 @@ export function Navbar() {
         </Link>
 
         <ul className="hidden items-center gap-9 md:flex">
-          {siteConfig.nav.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className="text-[13px] font-medium uppercase tracking-[0.16em] text-ivory/65 transition-colors hover:text-ivory"
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {siteConfig.nav.map((item) => {
+            const active = isActivePath(pathname, item.href);
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "relative py-1 text-[13px] font-medium uppercase tracking-[0.16em] transition-colors",
+                    active
+                      ? "text-ivory"
+                      : "text-ivory/65 hover:text-ivory",
+                  )}
+                >
+                  {item.label}
+                  <span
+                    className={cn(
+                      "pointer-events-none absolute -bottom-1 left-0 h-px bg-gold transition-all duration-300",
+                      active ? "w-full" : "w-0",
+                    )}
+                  />
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -104,15 +126,28 @@ export function Navbar() {
               </SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-1 px-4 pb-6">
-              {siteConfig.nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-none border-b border-ivory/8 px-1 py-4 text-base font-medium uppercase tracking-[0.14em] text-ivory/85 transition-colors hover:text-gold"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {siteConfig.nav.map((item) => {
+                const active = isActivePath(pathname, item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex items-center gap-3 rounded-none border-b border-ivory/8 px-1 py-4 text-base font-medium uppercase tracking-[0.14em] transition-colors hover:text-gold",
+                      active ? "text-gold" : "text-ivory/85",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "inline-block h-px transition-all",
+                        active ? "w-6 bg-gold" : "w-0 bg-transparent",
+                      )}
+                    />
+                    {item.label}
+                  </Link>
+                );
+              })}
               <div className="mt-6 grid gap-2">
                 <Button
                   asChild

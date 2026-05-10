@@ -7,6 +7,7 @@ export const siteConfig = {
     phone: "+92 300 123 4567",
     email: "hello@snipandstyle.pk",
     address: "12-C, Main Boulevard, Gulberg III, Lahore",
+    whatsapp: "+923135044999",
   },
   hours: [
     { day: "Mon – Fri", time: "10:00 — 21:00" },

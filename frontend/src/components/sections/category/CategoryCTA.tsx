@@ -56,8 +56,11 @@ export function CategoryCTA({ category, content }: Props) {
                 size="lg"
                 className="group h-12 rounded-none bg-gold px-7 text-noir hover:bg-ivory"
               >
-                <Link href="/book" className="flex items-center">
-                  Book {category.name.toLowerCase()}'s appointment
+                <Link
+                  href={`/book?category=${category.id}`}
+                  className="flex items-center"
+                >
+                  Book an appointment
                   <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>

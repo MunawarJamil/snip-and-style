@@ -71,7 +71,7 @@ export function FeaturedServices() {
               className="group flex flex-col overflow-hidden border border-ivory/8 bg-noir transition-all duration-500 hover:-translate-y-1 hover:border-gold/40"
             >
               <Link
-                href={`/services/${service.categoryId}/${service.slug}`}
+                href={`/book?service=${service.slug}&category=${service.categoryId}`}
                 className="flex h-full flex-col"
               >
                 <div className="relative aspect-video w-full overflow-hidden">

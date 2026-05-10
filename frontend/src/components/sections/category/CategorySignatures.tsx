@@ -58,7 +58,7 @@ export function CategorySignatures({ category, services }: Props) {
               className="group relative flex flex-col"
             >
               <Link
-                href={`/services/${service.categoryId}/${service.slug}`}
+                href={`/book?service=${service.slug}&category=${service.categoryId}`}
                 className="flex h-full flex-col"
               >
                 {/* Image */}

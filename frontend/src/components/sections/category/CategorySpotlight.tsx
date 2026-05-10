@@ -63,7 +63,7 @@ export function CategorySpotlight({ category, content }: Props) {
               {spotlight.bullets.map((b) => (
                 <li
                   key={b}
-                  className="flex items-start gap-3 text-[13px] leading-relaxed text-ivory/85 md:text-sm"
+                  className="flex items-start gap-2text-[13px] leading-relaxed text-ivory/85 md:text-sm"
                 >
                   <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center border border-gold/40 text-gold">
                     <Check className="size-3" />
@@ -77,13 +77,13 @@ export function CategorySpotlight({ category, content }: Props) {
               <Button
                 asChild
                 size="lg"
-                className="group h-12 rounded-none bg-gold px-7 text-noir hover:bg-ivory"
+                className="group h-12 rounded-none bg-gold px-2 text-noir hover:bg-ivory"
               >
                 <Link
-                  href={`/services/${category.id}/${spotlight.serviceSlug}`}
+                  href={`/book?service=${spotlight.serviceSlug}&category=${category.id}`}
                   className="flex items-center"
                 >
-                  Explore the package
+                  Book this experience
                   <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
@@ -91,7 +91,7 @@ export function CategorySpotlight({ category, content }: Props) {
                 asChild
                 size="lg"
                 variant="ghost"
-                className="h-12 rounded-none border border-ivory/20 px-7 text-ivory hover:bg-ivory/5 hover:text-ivory"
+                className="h-12 rounded-none border border-ivory/20 px-2 text-ivory hover:bg-ivory/5 hover:text-ivory"
               >
                 <Link href="/book">Book a consultation</Link>
               </Button>

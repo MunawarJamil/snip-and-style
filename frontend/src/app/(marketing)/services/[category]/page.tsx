@@ -67,9 +67,11 @@ export default async function CategoryPage({
   return (
     <>
       <CategoryHero category={cat} content={content} services={services} />
-      <CategoryPillars content={content} />
-      <CategorySignatures category={cat} services={featured} />
       <CategoryMenu category={cat} content={content} services={services} />
+
+      <CategoryPillars content={content} />
+
+      <CategorySignatures category={cat} services={featured} />
       <CategorySpotlight category={cat} content={content} />
       <CategoryProcess content={content} />
       <CategoryArtists category={cat} stylists={stylists} />

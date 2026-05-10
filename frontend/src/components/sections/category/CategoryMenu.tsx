@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
@@ -56,7 +56,6 @@ export function CategoryMenu({ category, content, services }: Props) {
   }, [services, activeGroup]);
 
   const activeMeta = availableGroups.find((g) => g.group === activeGroup);
-  const previewService = grouped[0];
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -126,8 +125,8 @@ export function CategoryMenu({ category, content, services }: Props) {
         </div>
 
         {/* Active group panel */}
-        <div className="mt-10 grid gap-10 md:mt-14 md:grid-cols-12 md:gap-10 lg:gap-14">
-          {/* Left — group blurb + smaller image preview */}
+        <div className="mt-8 grid gap-8 md:mt-14 md:grid-cols-12 md:gap-10 lg:gap-14">
+          {/* Left — image carousel + group blurb (+ desktop-only "Always included") */}
           <div className="md:col-span-4">
             <AnimatePresence mode="wait">
               <motion.div
@@ -136,37 +135,24 @@ export function CategoryMenu({ category, content, services }: Props) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.5, ease: easing }}
+                className="flex flex-col gap-6 md:gap-7"
               >
-                <p className="font-display text-2xl leading-snug tracking-tight text-ivory md:text-[1.6rem]">
-                  {activeMeta?.label}
-                </p>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-ivory-dim">
-                  {activeMeta?.description}
-                </p>
+                {/* Mobile: image first. Desktop: image after the label/description. */}
+                <div className="order-1 md:order-2">
+                  <MenuPreviewCarousel services={grouped} />
+                </div>
 
-                {previewService ? (
-                  <div className="relative mt-7 hidden aspect-square w-full max-w-sm overflow-hidden md:block">
-                    <Image
-                      src={previewService.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 768px) 30vw, 100vw"
-                      quality={82}
-                      className="object-cover opacity-85 transition-opacity duration-700 hover:opacity-100"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-noir/70 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <span className="text-[10px] uppercase tracking-[0.28em] text-gold">
-                        Featured · {previewService.name}
-                      </span>
-                    </div>
-                    <div className="pointer-events-none absolute left-0 top-0 size-8 border-l border-t border-gold/60" />
-                    <div className="pointer-events-none absolute bottom-0 right-0 size-8 border-b border-r border-gold/60" />
-                  </div>
-                ) : null}
+                <div className="order-2 md:order-1">
+                  <p className="font-display text-2xl leading-snug tracking-tight text-ivory md:text-[1.6rem]">
+                    {activeMeta?.label}
+                  </p>
+                  <p className="mt-3 max-w-md text-sm leading-relaxed text-ivory-dim">
+                    {activeMeta?.description}
+                  </p>
+                </div>
 
-                {/* Always-on side card — fills space gracefully */}
-                <div className="mt-7 border border-ivory/10 bg-noir-soft p-6 md:max-w-sm">
+                {/* Always-on side card — desktop only (text-heavy on mobile) */}
+                <div className="order-3 hidden border border-ivory/10 bg-noir-soft p-6 md:block md:max-w-sm">
                   <span className="flex size-9 items-center justify-center border border-gold/30 text-gold">
                     <ShieldCheck className="size-4" />
                   </span>
@@ -390,6 +376,102 @@ function ServiceExpandedPanel({ service }: { service: Service }) {
           </a>
         </Button>
       </div>
+    </div>
+  );
+}
+
+const ROTATE_MS = 4500;
+
+/** Auto-rotating image carousel for the active group's services.
+ *  - First image is eager (above-the-fold-ish on mobile after tab tap), rest lazy.
+ *  - Crossfade + slow Ken Burns scale; pauses on hover.
+ *  - Resets index when the service set changes (tab switch). */
+function MenuPreviewCarousel({ services }: { services: Service[] }) {
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  // Reset index when the underlying group changes
+  useEffect(() => {
+    setIdx(0);
+  }, [services]);
+
+  useEffect(() => {
+    if (services.length <= 1 || paused) return;
+    const id = setInterval(() => {
+      setIdx((i) => (i + 1) % services.length);
+    }, ROTATE_MS);
+    return () => clearInterval(id);
+  }, [services.length, paused]);
+
+  if (services.length === 0) return null;
+  const current = services[idx];
+
+  return (
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      className="relative aspect-[4/3] w-full overflow-hidden bg-noir-soft md:aspect-square"
+    >
+      <AnimatePresence mode="sync">
+        <motion.div
+          key={current.id}
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1 }}
+          transition={{
+            opacity: { duration: 0.85, ease: easing },
+            scale: { duration: ROTATE_MS / 1000 + 1.2, ease: "linear" },
+          }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={current.image}
+            alt={current.name}
+            fill
+            sizes="(min-width: 768px) 30vw, 100vw"
+            quality={75}
+            className="object-cover"
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Soft gradient + grain feel */}
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-noir/80 via-noir/15 to-transparent" />
+
+      {/* Bottom label + dots */}
+      <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 md:inset-x-5 md:bottom-5">
+        <div className="min-w-0">
+          <span className="text-[10px] uppercase tracking-[0.28em] text-gold">
+            Featured
+          </span>
+          <p className="font-display mt-1 truncate text-base leading-snug tracking-tight text-ivory md:text-[15px]">
+            {current.name}
+          </p>
+        </div>
+
+        {services.length > 1 ? (
+          <div className="flex shrink-0 items-center gap-1.5">
+            {services.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setIdx(i)}
+                aria-label={`Show ${s.name}`}
+                className={cn(
+                  "h-px transition-all duration-300",
+                  i === idx
+                    ? "w-7 bg-gold"
+                    : "w-3.5 bg-ivory/30 hover:bg-ivory/55",
+                )}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+
+      {/* Gold corner accents */}
+      <div className="pointer-events-none absolute left-0 top-0 size-8 border-l border-t border-gold/60" />
+      <div className="pointer-events-none absolute bottom-0 right-0 size-8 border-b border-r border-gold/60" />
     </div>
   );
 }

@@ -60,77 +60,84 @@ export function Navbar() {
           : "bg-linear-to-b from-noir/40 via-noir/10 to-transparent",
       )}
     >
-      <nav className="container-narrow flex h-16 items-center gap-3 md:h-20 md:gap-4">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="group flex shrink-0 items-center gap-2 text-ivory md:gap-3"
-          aria-label="Snip & Style — home"
-        >
-          <span className="flex size-9 items-center justify-center rounded-full border border-ivory/20 bg-ivory/5 transition-colors group-hover:border-gold/60">
-            <Scissors className="size-4 text-gold" />
-          </span>
-          <span className="font-display hidden text-lg tracking-tight sm:inline md:text-xl">
-            {siteConfig.name}
-          </span>
-        </Link>
+      <nav className="container-narrow flex items-center justify-between gap-3 py-3 md:h-20 md:gap-4 md:py-0">
+        {/* Left column — logo on top, mobile-only Women/Men beneath */}
+        <div className="flex min-w-0 flex-col gap-2 md:flex-row items-center md:gap-9">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="group flex shrink-0 items-center gap-2.5 text-ivory md:gap-3"
+            aria-label="Snip & Style — home"
+          >
+            <span className="flex size-9 items-center justify-center rounded-full border border-ivory/20 bg-ivory/5 transition-colors group-hover:border-gold/60">
+              <Scissors className="size-4 text-gold" />
+            </span>
+            <span className="font-display text-lg tracking-tight md:text-xl">
+              {siteConfig.name}
+            </span>
+          </Link>
 
-        {/* Mobile inline category links — Women / Men */}
-        <ul className="flex flex-1 items-center justify-center gap-4 md:hidden">
-          {mobileTopNav.map((item) => {
-            const active = isActivePath(pathname, item.href);
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "relative py-1 text-[11px] font-medium uppercase tracking-[0.18em] transition-colors",
-                    active ? "text-ivory" : "text-ivory/65 hover:text-ivory",
-                  )}
-                >
-                  {item.label}
-                  <span
+          {/* Mobile inline category links — under the logo */}
+          <ul className="ml-10  flex items-center gap-4 md:hidden">
+            {mobileTopNav.map((item) => {
+              const active = isActivePath(pathname, item.href);
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
-                      "pointer-events-none absolute -bottom-1 left-0 h-px bg-gold transition-all duration-300",
-                      active ? "w-full" : "w-0",
+                      "relative px-1 py-1 text-[11px] font-medium uppercase tracking-[0.22em] transition-colors",
+                      active
+                        ? "text-ivory"
+                        : "text-ivory/65 hover:text-ivory",
                     )}
-                  />
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                  >
+                    {item.label}
+                    <span
+                      className={cn(
+                        "pointer-events-none absolute inset-x-1 -bottom-0.5 h-px bg-gold transition-all duration-300",
+                        active ? "opacity-100" : "opacity-0",
+                      )}
+                    />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
 
-        {/* Desktop full nav */}
-        <ul className="ml-auto hidden items-center gap-9 md:flex">
-          {siteConfig.nav.map((item) => {
-            const active = isActivePath(pathname, item.href);
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "relative py-1 text-[13px] font-medium uppercase tracking-[0.16em] transition-colors",
-                    active ? "text-ivory" : "text-ivory/65 hover:text-ivory",
-                  )}
-                >
-                  {item.label}
-                  <span
+          {/* Desktop full nav — sits inline next to the logo */}
+          <ul className="hidden items-center gap-9 md:flex">
+            {siteConfig.nav.map((item) => {
+              const active = isActivePath(pathname, item.href);
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
-                      "pointer-events-none absolute -bottom-1 left-0 h-px bg-gold transition-all duration-300",
-                      active ? "w-full" : "w-0",
+                      "relative py-1 text-[13px] font-medium uppercase tracking-[0.16em] transition-colors",
+                      active
+                        ? "text-ivory"
+                        : "text-ivory/65 hover:text-ivory",
                     )}
-                  />
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                  >
+                    {item.label}
+                    <span
+                      className={cn(
+                        "pointer-events-none absolute -bottom-1 left-0 h-px bg-gold transition-all duration-300",
+                        active ? "w-full" : "w-0",
+                      )}
+                    />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
         {/* Right cluster — desktop sign in + book, mobile sign-in icon + hamburger */}
-        <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0 md:gap-3">
+        <div className="flex shrink-0 items-center gap-2 md:gap-3">
           {/* Desktop CTA group */}
           <div className="hidden items-center gap-3 md:flex">
             {isSignedIn ? null : (
@@ -152,20 +159,7 @@ export function Navbar() {
             </Button>
           </div>
 
-          {/* Mobile sign-in icon */}
-          {isSignedIn ? null : (
-            <Link
-              href="/login"
-              aria-label="Sign in"
-              className="group relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 bg-noir-soft text-ivory transition-all duration-300 hover:border-gold hover:bg-gold hover:text-noir md:hidden"
-            >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-gold/25 to-transparent transition-transform duration-700 group-hover:translate-x-full"
-              />
-              <UserRound className="relative size-4" />
-            </Link>
-          )}
+        
 
           {/* Mobile hamburger */}
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

@@ -12,27 +12,27 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-noir px-6 py-24">
-      <div className="absolute inset-0 -z-10 bg-linear-to-br from-noir via-noir-soft to-noir" />
+    <main className="bg-noir relative flex min-h-screen items-center justify-center px-6 py-24">
+      <div className="from-noir via-noir-soft to-noir absolute inset-0 -z-10 bg-linear-to-br" />
 
-      <div className="w-full max-w-md border border-ivory/10 bg-noir-soft p-8 md:p-10">
-        <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
-          <span className="mr-3 inline-block h-px w-8 align-middle bg-gold/60" />
+      <div className="border-ivory/10 bg-noir-soft w-full max-w-md border p-8 md:p-10">
+        <span className="text-gold text-[10px] font-medium tracking-[0.3em] uppercase">
+          <span className="bg-gold/60 mr-3 inline-block h-px w-8 align-middle" />
           Guest sign in
         </span>
-        <h1 className="font-display mt-5 text-3xl leading-tight tracking-tight text-ivory md:text-4xl">
+        <h1 className="font-display text-ivory mt-5 text-3xl leading-tight tracking-tight md:text-4xl">
           Welcome back to{" "}
-          <span className="italic text-gold">{siteConfig.name}.</span>
+          <span className="text-gold italic">{siteConfig.name}.</span>
         </h1>
-        <p className="mt-4 text-sm leading-relaxed text-ivory-dim">
+        <p className="text-ivory-dim mt-4 text-sm leading-relaxed">
           Guest accounts are arriving soon — you'll be able to track upcoming
           appointments, save preferred stylists, and view your aftercare cards
           all in one place.
         </p>
 
-        <div className="mt-8 space-y-3 border-t border-ivory/10 pt-7">
-          <div className="flex items-start gap-3 text-sm text-ivory-dim">
-            <ShieldCheck className="mt-0.5 size-4 shrink-0 text-gold/80" />
+        <div className="border-ivory/10 mt-8 space-y-3 border-t pt-7">
+          <div className="text-ivory-dim flex items-start gap-3 text-sm">
+            <ShieldCheck className="text-gold/80 mt-0.5 size-4 shrink-0" />
             <span>
               In the meantime, our front desk has every guest's history on file
               — just call or message us.
@@ -44,7 +44,7 @@ export default function LoginPage() {
           <Button
             asChild
             size="lg"
-            className="group h-12 rounded-none bg-gold px-7 text-noir hover:bg-ivory"
+            className="group bg-gold text-noir hover:bg-ivory h-12 rounded-none px-7"
           >
             <Link href="/book" className="flex items-center justify-center">
               Book an appointment
@@ -57,7 +57,7 @@ export default function LoginPage() {
               asChild
               variant="ghost"
               size="lg"
-              className="h-12 rounded-none border border-ivory/15 px-4 text-ivory hover:bg-ivory/5 hover:text-ivory"
+              className="border-ivory/15 text-ivory hover:bg-ivory/5 hover:text-ivory h-12 rounded-none border px-4"
             >
               <a
                 href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
@@ -71,7 +71,7 @@ export default function LoginPage() {
               asChild
               variant="ghost"
               size="lg"
-              className="h-12 rounded-none border border-ivory/15 px-4 text-ivory hover:bg-ivory/5 hover:text-ivory"
+              className="border-ivory/15 text-ivory hover:bg-ivory/5 hover:text-ivory h-12 rounded-none border px-4"
             >
               <a
                 href={`mailto:${siteConfig.contact.email}`}
@@ -84,10 +84,10 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-ivory/10 pt-5 text-center">
+        <div className="border-ivory/10 mt-8 border-t pt-5 text-center">
           <Link
             href="/"
-            className="text-[11px] uppercase tracking-[0.22em] text-ivory/55 transition-colors hover:text-gold"
+            className="text-ivory/55 hover:text-gold text-[11px] tracking-[0.22em] uppercase transition-colors"
           >
             Back to home
           </Link>
